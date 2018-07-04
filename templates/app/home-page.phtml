@@ -1,0 +1,9 @@
+<?php
+/** @var $this \Zend\View\Renderer\PhpRenderer  */
+
+$this->headTitle('Home');
+?>
+
+<div class="jumbotron">
+    <h1>Hallo <?= $this->escapeHtml($data['first_name']) ?>!</h1>
+</div>
