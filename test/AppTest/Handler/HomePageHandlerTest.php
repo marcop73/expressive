@@ -10,9 +10,10 @@ use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Diactoros\Response\JsonResponse;
+use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Expressive\Router\RouterInterface;
+use Zend\Expressive\Session\SessionInterface;
+use Zend\Expressive\Session\SessionMiddleware;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 class HomePageHandlerTest extends TestCase
@@ -29,21 +30,8 @@ class HomePageHandlerTest extends TestCase
         $this->router    = $this->prophesize(RouterInterface::class);
     }
 
-    public function testReturnsJsonResponseWhenNoTemplateRendererProvided()
-    {
-        $homePage = new HomePageHandler(
-            $this->router->reveal(),
-            null,
-            get_class($this->container->reveal())
-        );
-        $response = $homePage->handle(
-            $this->prophesize(ServerRequestInterface::class)->reveal()
-        );
 
-        $this->assertInstanceOf(JsonResponse::class, $response);
-    }
-
-    public function testReturnsHtmlResponseWhenTemplateRendererProvided()
+    public function testWithoutRegister()
     {
         $renderer = $this->prophesize(TemplateRendererInterface::class);
         $renderer
@@ -51,15 +39,21 @@ class HomePageHandlerTest extends TestCase
             ->willReturn('');
 
         $homePage = new HomePageHandler(
-            $this->router->reveal(),
-            $renderer->reveal(),
-            get_class($this->container->reveal())
+            $renderer->reveal()
         );
+
+        $request = $this->prophesize(ServerRequestInterface::class);
+
+        $session = $this->prophesize(SessionInterface::class);
+        $session->has(Argument::type('string'))->willReturn(false);
+
+        $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE)->willReturn($session->reveal());
+
 
         $response = $homePage->handle(
-            $this->prophesize(ServerRequestInterface::class)->reveal()
+            $request->reveal()
         );
 
-        $this->assertInstanceOf(HtmlResponse::class, $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 }
