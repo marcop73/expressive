@@ -3,7 +3,7 @@
 
 ## Getting Started
 
-Start the demo project:
+Clone the demo project:
 
 ```bash
 $ git clone git@github.com:marcop73/expressive.git
