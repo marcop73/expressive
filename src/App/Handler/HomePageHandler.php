@@ -34,7 +34,7 @@ class HomePageHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
         $this->session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
-        if (false === $this->session->has('register')) {
+        if (null === $this->session || false === $this->session->has('register')) {
             return new RedirectResponse('/register');
         }
 
