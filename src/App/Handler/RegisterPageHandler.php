@@ -4,7 +4,7 @@ declare( strict_types=1 );
 namespace App\Handler;
 
 use App\Form\RegisterForm;
-use Psr\Http\Server\MiddlewareInterface;
+
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -21,7 +21,7 @@ use Zend\Expressive\Template\TemplateRendererInterface;
  * @package App\Handler
  * @author: Marco Peemöller
  */
-class RegisterPageHandler implements MiddlewareInterface
+class RegisterPageHandler implements RequestHandlerInterface
 {
     private const POST_REQUEST = 'POST';
 
@@ -48,11 +48,10 @@ class RegisterPageHandler implements MiddlewareInterface
 
     /**
      * @param ServerRequestInterface $request
-     * @param RequestHandlerInterface $handler
      *
      * @return ResponseInterface
      */
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
+    public function handle(ServerRequestInterface $request) : ResponseInterface
     {
         $this->session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
         if (true === $this->session->has('register')) {

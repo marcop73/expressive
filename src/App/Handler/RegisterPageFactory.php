@@ -4,8 +4,8 @@ declare( strict_types=1 );
 namespace App\Handler;
 
 use App\Form\RegisterForm;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
@@ -17,11 +17,10 @@ use Zend\Expressive\Template\TemplateRendererInterface;
  */
 class RegisterPageFactory
 {
-
     /** @var RegisterForm */
     private $registerForm;
 
-    public function __invoke(ContainerInterface $container) : MiddlewareInterface
+    public function __invoke(ContainerInterface $container) : RequestHandlerInterface
     {
         $template  = $container->get(TemplateRendererInterface::class);
 
